@@ -1,8 +1,10 @@
 import typescript from 'rollup-plugin-typescript2'
 import pkg from './package.json'
 
+const input = 'src/index.ts'
+
 export default {
-  input: 'src/index.ts',
+  input,
   output: [
     {
       file: pkg.main,
@@ -20,6 +22,7 @@ export default {
   plugins: [
     typescript({
       typescript: require('typescript'),
+      useTsconfigDeclarationDir: true,
     }),
   ],
 }

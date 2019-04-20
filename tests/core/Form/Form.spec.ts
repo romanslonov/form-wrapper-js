@@ -38,7 +38,7 @@ describe('Form.ts', () => {
   let defaultOptions = Object.assign({}, defaultOptionsSource)
 
   beforeEach(() => {
-    Validator.prototype.validateField = jest.fn(() => [])
+    Validator.prototype.validateField = jest.fn(() => Promise.resolve())
   })
 
   it('should init correctly', () => {
@@ -144,7 +144,7 @@ describe('Form.ts', () => {
 
   it('should call values on FormCollection if the field is FormCollection', () => {
     const mockText = 'This is a mock test'
-    FormCollection.prototype.values = jest.fn(() => mockText)
+    FormCollection.prototype.values = jest.fn(() => [mockText])
 
     const form = new Form({
       name: null,
@@ -159,7 +159,7 @@ describe('Form.ts', () => {
     expect(form['emails'].values).toHaveBeenCalledTimes(1)
     expect(values).toEqual({
       name: null,
-      emails: mockText,
+      emails: [mockText],
     })
   })
 

@@ -132,6 +132,7 @@ describe('Rule.ts', () => {
   it('should validate even if the returns value of passes is not boolean or promise', async () => {
     const passes = jest.fn(() => '')
 
+    // @ts-ignore
     const rule = Rule.buildFromRawValue(passes, fakeDefaultMessage)
 
     expect.assertions(3)

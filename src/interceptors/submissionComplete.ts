@@ -1,7 +1,7 @@
 import {
   InterceptorHandler,
   InvalidResponse,
-  successfulResponse,
+  SuccessfulResponse,
 } from '../types/Interceptors'
 
 /**
@@ -9,7 +9,7 @@ import {
  * was successful or not
  */
 export const setSubmittingAsFalse: InterceptorHandler = {
-  fulfilled: (response: successfulResponse) => {
+  fulfilled: (response: SuccessfulResponse) => {
     response.form.$submitting = false
 
     return Promise.resolve(response)
@@ -26,7 +26,7 @@ export const setSubmittingAsFalse: InterceptorHandler = {
  * that was set at the form.
  */
 export const clearForm: InterceptorHandler = {
-  fulfilled: (response: successfulResponse) => {
+  fulfilled: (response: SuccessfulResponse) => {
     const { form } = response
 
     form.$options.successfulSubmission.clearErrors && form.$errors.clear()

@@ -22,7 +22,7 @@ export interface InterceptorManagersObject {
  * The interface of an object with successful response from the
  * SubmitCallback function
  */
-export interface successfulResponse {
+export interface SuccessfulResponse {
   form: Form
   response: any
 }

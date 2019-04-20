@@ -10,9 +10,8 @@ import generateOptions from '../helpers/generateOptions'
 import defaultOptions from '../default-options'
 import basicInterceptors from '../interceptors/index'
 import { Field, FieldOptions, RawFormFields } from '../types/Field'
-import { FormDefaults } from '../types/Form'
+import { FormDefaults, SubmitCallback } from '../types/Form'
 import { Options } from '../types/Options'
-import { SubmitCallback } from '../types/Form'
 import {
   InterceptorHandler,
   InterceptorManagersObject,
