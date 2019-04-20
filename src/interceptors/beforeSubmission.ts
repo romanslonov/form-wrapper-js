@@ -1,11 +1,11 @@
 import { Form } from '../core/Form'
-import { InterceptorHandler } from '../types/Interceptors'
+import { IInterceptorHandler } from '../types/Interceptors'
 
 /**
  * validate the form before submission
  * only if the option of validation on submission set as true.
  */
-export const validateForm: InterceptorHandler = {
+export const validateForm: IInterceptorHandler = {
   fulfilled: (form: Form): Promise<any> => {
     if (form.$options.validation.onSubmission) {
       return form.$validate().then(() => {
@@ -26,7 +26,7 @@ export const validateForm: InterceptorHandler = {
  * Set the $submitting as true (this is must to be the LAST interceptor before submitting)
  * but the FIRST here in the export array
  */
-export const setSubmittingAsTrue: InterceptorHandler = {
+export const setSubmittingAsTrue: IInterceptorHandler = {
   fulfilled: (form: Form): Promise<any> => {
     form.$submitting = true
 

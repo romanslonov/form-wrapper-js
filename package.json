@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "lint": "tslint  --project tsconfig.json -t codeFrame src/**/*.ts tests/**/*.ts",
+    "lint": "tslint  --project tsconfig.json -t codeFrame",
     "test": "jest",
     "test:watch": "npm run test --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",

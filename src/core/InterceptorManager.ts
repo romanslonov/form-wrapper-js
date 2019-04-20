@@ -1,17 +1,17 @@
-import { InterceptorHandler } from '../types/Interceptors'
+import { IInterceptorHandler } from '../types/Interceptors'
 
 export class InterceptorManager {
   /**
    * holds all the function that should run on the chain
    */
-  $handlers: InterceptorHandler[] = []
+  private _handlers: IInterceptorHandler[] = []
 
   /**
    * constructor
    *
    * @param handlers
    */
-  constructor(handlers: InterceptorHandler[] = []) {
+  constructor(handlers: IInterceptorHandler[] = []) {
     this.merge(handlers)
   }
 
@@ -23,15 +23,15 @@ export class InterceptorManager {
    * @param rejected
    */
   public use(
-    fulfilled: Function | null,
-    rejected: Function | null = null
+    fulfilled: (response: any) => any | null,
+    rejected: (error: any) => any | null = null
   ): number {
-    this.$handlers.push({
+    this._handlers.push({
       fulfilled,
       rejected,
     })
 
-    return this.$handlers.length - 1
+    return this._handlers.length - 1
   }
 
   /**
@@ -40,8 +40,8 @@ export class InterceptorManager {
    * @param position
    */
   public eject(position: number): void {
-    if (this.$handlers[position]) {
-      this.$handlers[position] = null
+    if (this._handlers[position]) {
+      this._handlers[position] = null
     }
   }
 
@@ -51,8 +51,8 @@ export class InterceptorManager {
    *
    * @param interceptors
    */
-  public merge(interceptors: InterceptorHandler[]): InterceptorManager {
-    this.$handlers = [...interceptors, ...this.$handlers]
+  public merge(interceptors: IInterceptorHandler[]): InterceptorManager {
+    this._handlers = [...interceptors, ...this._handlers]
 
     return this
   }
@@ -60,8 +60,8 @@ export class InterceptorManager {
   /**
    * return all the handlers
    */
-  public all(): InterceptorHandler[] {
-    return this.$handlers
+  public all(): IInterceptorHandler[] {
+    return this._handlers
   }
 
   /**
@@ -69,8 +69,8 @@ export class InterceptorManager {
    *
    * @param func
    */
-  public forEach(func: Function): void {
-    this.$handlers.forEach((handler: InterceptorHandler) => {
+  public forEach(func: (handler: IInterceptorHandler) => any): void {
+    this._handlers.forEach((handler: IInterceptorHandler) => {
       if (handler !== null) {
         func(handler)
       }

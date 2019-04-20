@@ -1,4 +1,4 @@
-import { Options } from '../types/Options'
+import { IOptions } from '../types/Options'
 import { isObject } from '../utils'
 
 /**
@@ -8,10 +8,10 @@ import { isObject } from '../utils'
  * @param newOptions
  */
 const assignNewOptions = (
-  originOptions: Object,
-  newOptions: Object
-): Object => {
-  let options = {}
+  originOptions: IOptions,
+  newOptions: IOptions
+): IOptions => {
+  const options = {}
 
   Object.keys(originOptions).forEach(key => {
     if (!newOptions.hasOwnProperty(key)) {
@@ -37,8 +37,8 @@ const assignNewOptions = (
  * @param overwriteOptions
  */
 export default (
-  defaultOptions: Options,
-  overwriteOptions: Options
-): Options => {
+  defaultOptions: IOptions,
+  overwriteOptions: IOptions
+): IOptions => {
   return assignNewOptions(defaultOptions, overwriteOptions)
 }

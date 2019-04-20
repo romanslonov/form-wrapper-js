@@ -1,14 +1,14 @@
-import { Errors } from '../../../src/core/validation/Errors'
-import { Validator } from '../../../src/core/validation/Validator'
 import { FieldKeysCollection } from '../../../src/core/FieldKeysCollection'
-import { FormCollection } from '../../../src/core/FormCollection'
 import { Form } from '../../../src/core/Form'
-import generateOptions from '../../../src/helpers/generateOptions'
-import defaultOptionsSource from '../../../src/default-options'
+import { FormCollection } from '../../../src/core/FormCollection'
 import { InterceptorManager } from '../../../src/core/InterceptorManager'
-import * as utils from '../../../src/utils'
-import generateDebouncedValidateField from '../../../src/helpers/generateDebouncedValidateField'
+import { Errors } from '../../../src/core/validation/Errors'
 import { RulesManager } from '../../../src/core/validation/RulesManager'
+import { Validator } from '../../../src/core/validation/Validator'
+import defaultOptionsSource from '../../../src/default-options'
+import generateDebouncedValidateField from '../../../src/helpers/generateDebouncedValidateField'
+import generateOptions from '../../../src/helpers/generateOptions'
+import * as utils from '../../../src/utils'
 
 jest.mock('../../../src/core/validation/Errors')
 jest.mock('../../../src/core/validation/Validator')
@@ -23,19 +23,19 @@ jest.mock('../../../src/helpers/generateDebouncedValidateField', () => {
 })
 
 describe('Form.ts', () => {
-  interface FormData {
+  interface IFormData {
     first_name: string | null
     last_name: string | null
     is_developer: boolean
   }
 
-  let data: FormData = {
+  const data: IFormData = {
     first_name: null,
-    last_name: null,
     is_developer: false,
+    last_name: null,
   }
 
-  let defaultOptions = Object.assign({}, defaultOptionsSource)
+  const defaultOptions = Object.assign({}, defaultOptionsSource)
 
   beforeEach(() => {
     Validator.prototype.validateField = jest.fn(() => Promise.resolve())
@@ -48,36 +48,36 @@ describe('Form.ts', () => {
     const assignOptionsSpy = jest.spyOn(Form.prototype, '$assignOptions')
     const uniqueIdSpy = jest.spyOn(utils, 'uniqueId')
 
-    let form = new Form({
+    const form = new Form({
       first_name: {
-        value: 'Nevo',
         label: 'Name',
         rules: rulesArray,
+        value: 'Nevo',
       },
-      last_name: 'Golan',
       is_developer: {
-        value: false,
-        rules: isDeveloperRulesArray,
         extra: {
           options: [1, 0],
         },
+        rules: isDeveloperRulesArray,
+        value: false,
       },
-    }) as Form & FormData
+      last_name: 'Golan',
+    }) as Form & IFormData
 
     expect(form.first_name).toBe('Nevo')
     expect(form.last_name).toBe('Golan')
     expect(form.is_developer).toBe(false)
     expect(form.$labels).toEqual({
       first_name: 'Name',
-      last_name: 'Last name',
       is_developer: 'Is developer',
+      last_name: 'Last name',
     })
     expect(form.$extra).toEqual({
       first_name: {},
-      last_name: {},
       is_developer: {
         options: [1, 0],
       },
+      last_name: {},
     })
 
     expect(uniqueIdSpy).toHaveBeenCalledTimes(1)
@@ -101,17 +101,17 @@ describe('Form.ts', () => {
   })
 
   it('should access the form props', () => {
-    let form = new Form({
+    const form = new Form({
       first_name: 'Nevo',
       last_name: 'Golan',
-    }) as Form & FormData
+    }) as Form & IFormData
 
     expect(form.first_name).toBe('Nevo')
     expect(form.last_name).toBe('Golan')
   })
 
   it('should assign options to the form', () => {
-    let form = new Form(data) as Form & FormData
+    const form = new Form(data) as Form & IFormData
 
     expect(form.$options).toEqual(defaultOptions)
     expect(form.$options.successfulSubmission.clearErrors).toBe(true)
@@ -127,8 +127,8 @@ describe('Form.ts', () => {
     expect(form.$debouncedValidateField).toBe('fakeResponse')
   })
 
-  it('should returns the values on call', function() {
-    let form = new Form(data) as Form & { [key: string]: any }
+  it('should returns the values on call', () => {
+    const form = new Form(data) as Form & { [key: string]: any }
 
     form.first_name = 'Nevo'
     form.last_name = 'Golan'
@@ -143,23 +143,22 @@ describe('Form.ts', () => {
   })
 
   it('should call values on FormCollection if the field is FormCollection', () => {
-    const mockText = 'This is a mock test'
-    FormCollection.prototype.values = jest.fn(() => [mockText])
+    FormCollection.prototype.values = jest.fn(() => [{}])
 
     const form = new Form({
-      name: null,
       emails: new FormCollection({
         email: null,
         type: null,
       }),
-    })
+      name: null,
+    }) as Form & { [key: string]: any }
 
     const values = form.$values()
 
-    expect(form['emails'].values).toHaveBeenCalledTimes(1)
+    expect(form.emails.values).toHaveBeenCalledTimes(1)
     expect(values).toEqual({
+      emails: [{}],
       name: null,
-      emails: [mockText],
     })
   })
 
@@ -196,7 +195,7 @@ describe('Form.ts', () => {
   })
 
   it('should resetValues the values of the form', () => {
-    let form = new Form(data) as Form & FormData
+    const form = new Form(data) as Form & IFormData
 
     form.first_name = 'Nevo'
     form.last_name = 'Golan'
@@ -207,9 +206,9 @@ describe('Form.ts', () => {
   })
 
   it('should fill the form with new values', () => {
-    let form = new Form(data) as Form & FormData
+    const form = new Form(data) as Form & IFormData
 
-    let newData = {
+    const newData = {
       first_name: 'Nevo',
       last_name: 'Golan',
       not_real_prop: 'Somthing',
@@ -234,22 +233,22 @@ describe('Form.ts', () => {
     ]
 
     const mockValues = {
-      name: 'Nevo',
       emails: emailsValues,
+      name: 'Nevo',
     }
 
     const form = new Form({
-      name: null,
       emails: new FormCollection({
         email: null,
         type: null,
       }),
-    })
+      name: null,
+    }) as Form & { [key: string]: any }
 
     form.$fill(mockValues)
 
-    expect(form['emails'].fill).toHaveBeenCalledWith(emailsValues)
-    expect(form['name']).toBe('Nevo')
+    expect(form.emails.fill).toHaveBeenCalledWith(emailsValues)
+    expect(form.name).toBe('Nevo')
   })
 
   it('should change the defaultOptions options of the Form', () => {
@@ -258,7 +257,7 @@ describe('Form.ts', () => {
     Form.defaults.options.successfulSubmission.clearErrors = false
     Form.defaults.options.successfulSubmission.resetValues = false
 
-    let form = new Form(data)
+    const form = new Form(data)
 
     expect(
       // @ts-ignore
@@ -273,16 +272,16 @@ describe('Form.ts', () => {
 
   it('should assign defaultOptions to the form', () => {
     Form.assignDefaultOptions({
-      validation: {
-        defaultMessage: ({ label, value }) => `${label}: ${value}`,
-      },
       successfulSubmission: {
         clearErrors: false,
         resetValues: false,
       },
+      validation: {
+        defaultMessage: ({ label, value }) => `${label}: ${value}`,
+      },
     })
 
-    let form = new Form(data)
+    const form = new Form(data)
 
     expect(
       // @ts-ignore
@@ -296,7 +295,7 @@ describe('Form.ts', () => {
   })
 
   it('should determine if field is dirty', () => {
-    let form = new Form(data) as Form & FormData
+    const form = new Form(data) as Form & IFormData
 
     form.first_name = 'something else'
 
@@ -305,9 +304,9 @@ describe('Form.ts', () => {
   })
 
   it('should warn if field key that passed to isDirtyField is not exists', () => {
-    let warnMock = jest.spyOn(utils, 'warn')
+    const warnMock = jest.spyOn(utils, 'warn')
 
-    let form = new Form({ name: null })
+    const form = new Form({ name: null })
 
     form.$isFieldDirty('some_key')
 
@@ -315,17 +314,17 @@ describe('Form.ts', () => {
   })
 
   it('should run isFieldDirty (argument passes to "isDirty")', () => {
-    let form = new Form(data) as Form & FormData
+    const form = new Form(data) as Form & IFormData
 
     form.$isFieldDirty = jest.fn(() => false)
 
-    let res = form.$isDirty('first_name')
+    const res = form.$isDirty('first_name')
     expect(form.$isFieldDirty).toHaveBeenCalledWith('first_name')
     expect(res).toBe(false)
   })
 
   it('should determine if the whole form is dirty or not', () => {
-    let form = new Form(data) as Form & FormData
+    const form = new Form(data) as Form & IFormData
 
     expect(form.$isDirty()).toBe(false)
 
@@ -335,7 +334,7 @@ describe('Form.ts', () => {
   })
 
   it('should reset all the form state', () => {
-    let form = new Form(data)
+    const form = new Form(data)
 
     form.$resetValues = jest.fn()
 

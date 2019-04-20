@@ -1,6 +1,6 @@
+import { Form } from '../../src/core/Form'
 import generateDebouncedValidateField from '../../src/helpers/generateDebouncedValidateField'
 import * as utils from '../../src/utils'
-import { Form } from '../../src/core/Form'
 
 jest.mock('../../src/utils', () => {
   return {
@@ -16,14 +16,14 @@ describe('generateDebouncedValidateField.ts', () => {
     // and the mock of the utils.
     Form.prototype.$addFields = jest.fn()
 
-    let form = new Form({ name: null })
+    const form = new Form({ name: null })
 
     Function.prototype.bind = jest.fn(function() {
       return this
     })
     form.$options.validation.debouncedValidateFieldTime = 500
 
-    let result = generateDebouncedValidateField(form)
+    const result = generateDebouncedValidateField(form)
 
     expect(result).toBe('example')
     expect(utils.debounce).toHaveBeenLastCalledWith(form.$validateField, 500)

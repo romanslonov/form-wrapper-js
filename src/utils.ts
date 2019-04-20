@@ -1,5 +1,5 @@
-import { RawRule } from './types/Validator'
-import { FieldOptions } from './types/Field'
+import { IFieldOptions } from './types/Field'
+import { IRawRule } from './types/Validator'
 
 /**
  * determine if value is a boolean
@@ -33,7 +33,7 @@ export const isPromise = (value: any): value is Promise<any> => {
  *
  * @param value
  */
-export const isRawRule = (value: any): value is RawRule => {
+export const isRawRule = (value: any): value is IRawRule => {
   return isObject(value) && typeof value.passes === 'function'
 }
 
@@ -42,7 +42,7 @@ export const isRawRule = (value: any): value is RawRule => {
  *
  * @param value
  */
-export const isFieldOptions = (value: any): value is FieldOptions => {
+export const isFieldOptions = (value: any): value is IFieldOptions => {
   return isObject(value) && typeof value.value !== 'undefined'
 }
 
@@ -68,7 +68,10 @@ export const warn = (message): void => {
  * @param callback
  * @param time
  */
-export const debounce = (callback: Function, time: number): Function => {
+export const debounce = (
+  callback: (...args) => any,
+  time: number
+): ((...args) => void) => {
   let interval
 
   return (...args) => {

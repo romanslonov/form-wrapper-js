@@ -7,24 +7,24 @@ jest.mock('../../../src/core/FieldKeysCollection')
 
 describe('Form.submit.ts', () => {
   it('should successfully submitted if the callback returns Promise.resolve', async () => {
-    let form = new Form({}) as Form
+    const form = new Form({}) as Form
 
-    let responseParam = {
-      status: 200,
+    const responseParam = {
       data: {},
+      status: 200,
     }
 
     form.$resetValues = jest.fn()
 
     expect.assertions(6)
 
-    let mockCallable = jest.fn(formParam => {
+    const mockCallable = jest.fn(formParam => {
       expect(formParam).toBe(form)
 
       return Promise.resolve(responseParam)
     })
 
-    let response = await form.$submit(mockCallable)
+    const response = await form.$submit(mockCallable)
 
     expect(mockCallable.mock.calls.length).toBe(1)
     expect(form.$errors.clear).toHaveBeenCalledTimes(1)
@@ -34,13 +34,13 @@ describe('Form.submit.ts', () => {
   })
 
   it('should send reject promise if the callback was return reject promise', async () => {
-    let form = new Form({}) as Form
+    const form = new Form({}) as Form
 
-    let responseParam = {
+    const responseParam = {
       status: 404,
     }
 
-    let mockCallable = jest.fn(() => Promise.reject(responseParam))
+    const mockCallable = jest.fn(() => Promise.reject(responseParam))
 
     expect.assertions(2)
 
@@ -53,7 +53,7 @@ describe('Form.submit.ts', () => {
   })
 
   it('should validate the form on submission if the option is set to true', async () => {
-    let form = new Form(
+    const form = new Form(
       {
         name: 'Nevo',
       },
@@ -86,7 +86,7 @@ describe('Form.submit.ts', () => {
   })
 
   it('should not validate the form before submission if the option set to false', async () => {
-    let form = new Form(
+    const form = new Form(
       {
         name: 'Nevo',
       },
@@ -105,7 +105,7 @@ describe('Form.submit.ts', () => {
   })
 
   it('should set $submitting as true if submit method is called', () => {
-    let form = new Form({}) as Form
+    const form = new Form({}) as Form
 
     form.$validate = jest.fn(() => Promise.resolve())
 
@@ -123,9 +123,9 @@ describe('Form.submit.ts', () => {
   })
 
   it('should set $submitting false if validation failed and callback method not called', () => {
-    let form = new Form({}) as Form
+    const form = new Form({}) as Form
 
-    let mockCallable = jest.fn(() => Promise.resolve())
+    const mockCallable = jest.fn(() => Promise.resolve())
     form.$errors.any = jest.fn(() => true)
 
     form.$submit(mockCallable).catch(() => false)
@@ -135,7 +135,7 @@ describe('Form.submit.ts', () => {
   })
 
   it('should not resetValues after success submission if resetValues option is false', async () => {
-    let form = new Form(
+    const form = new Form(
       {},
       {
         successfulSubmission: {
@@ -154,7 +154,7 @@ describe('Form.submit.ts', () => {
   })
 
   it('should not clear errors after success submission if clearErrorsAfterSuccessfulSubmission option is false', async () => {
-    let form = new Form(
+    const form = new Form(
       {},
       {
         successfulSubmission: {
@@ -173,7 +173,7 @@ describe('Form.submit.ts', () => {
   })
 
   it('should not clear touched after success submission if successfulSubmission.clearTouched set to false', async () => {
-    let form = new Form(
+    const form = new Form(
       {},
       {
         successfulSubmission: {

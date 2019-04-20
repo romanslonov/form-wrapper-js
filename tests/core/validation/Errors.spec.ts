@@ -1,27 +1,27 @@
 import { Errors } from '../../../src/core/validation/Errors'
 
 describe('Errors.ts', () => {
-  let errorsData = {
-    name: ['Error1', 'Error2'],
+  const errorsData = {
     email: ['Error1'],
+    name: ['Error1', 'Error2'],
   }
 
   it('should returns all the errors array', () => {
-    let errors = new Errors(errorsData)
+    const errors = new Errors(errorsData)
 
     expect(errors.all()).toEqual(errorsData)
   })
 
   it('should record the errors', () => {
-    let errors = new Errors()
+    const errors = new Errors()
 
     errors.record(errorsData)
 
-    expect(errors.$errors).toEqual(errorsData)
+    expect(errors.all()).toEqual(errorsData)
   })
 
   it('should get the errors array of specific key or default value', () => {
-    let errors = new Errors(errorsData)
+    const errors = new Errors(errorsData)
 
     errors.get('name')
 
@@ -31,7 +31,7 @@ describe('Errors.ts', () => {
   })
 
   it('should delete a key from the errors object', () => {
-    let errors = new Errors(errorsData)
+    const errors = new Errors(errorsData)
 
     errors.unset('name')
 
@@ -39,14 +39,14 @@ describe('Errors.ts', () => {
   })
 
   it('should check if there is a key inside the errors array', () => {
-    let errors = new Errors(errorsData)
+    const errors = new Errors(errorsData)
 
     expect(errors.has('name')).toBeTruthy()
     expect(errors.has('other')).toBeFalsy()
   })
 
   it('should check if there any error in errors array', () => {
-    let errors = new Errors()
+    const errors = new Errors()
 
     expect(errors.any()).toBeFalsy()
 
@@ -56,7 +56,7 @@ describe('Errors.ts', () => {
   })
 
   it('should clear all the errors array', () => {
-    let errors = new Errors(errorsData)
+    const errors = new Errors(errorsData)
 
     errors.clear()
 
@@ -64,15 +64,15 @@ describe('Errors.ts', () => {
   })
 
   it('should returns the first error of the field key or default value', () => {
-    let errors = new Errors(errorsData)
+    const errors = new Errors(errorsData)
 
     expect(errors.getFirst('name')).toEqual('Error1')
     expect(errors.getFirst('other1')).toEqual(null)
     expect(errors.getFirst('other2', 'not error')).toEqual('not error')
   })
 
-  it('should append error to the errors stack', function() {
-    let errors = new Errors(errorsData)
+  it('should append error to the errors stack', () => {
+    const errors = new Errors(errorsData)
 
     errors.push({ name: ['another error'], is_developer: ['boolean'] })
     expect(errors.get('name')).toEqual(['another error'])

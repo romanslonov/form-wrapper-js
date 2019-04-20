@@ -1,18 +1,18 @@
+import { mocked } from 'ts-jest/utils'
 import { Form } from '../../../src/core/Form'
 import { FieldValidationError } from '../../../src/errors/FieldValidationError'
 import * as utils from '../../../src/utils'
-import { mocked } from 'ts-jest/utils'
 
 jest.mock('../../../src/core/validation/Errors')
 jest.mock('../../../src/core/FieldKeysCollection')
 
 describe('Form.validation.ts', () => {
   it('should validate specific field', async () => {
-    let form = new Form({
+    const form = new Form({
       name: {
-        value: 'a',
         label: 'The Name',
         rules: [() => true],
+        value: 'a',
       },
     })
 
@@ -48,7 +48,7 @@ describe('Form.validation.ts', () => {
   it('should warn if trying to validate field and the field is not exists', async () => {
     const warnSpy = jest.spyOn(utils, 'warn')
 
-    let form = new Form({ name: null })
+    const form = new Form({ name: null })
 
     await form.$validateField('first_name')
 
@@ -57,14 +57,14 @@ describe('Form.validation.ts', () => {
   })
 
   it('should validate all the fields of the form', async () => {
-    let form = new Form({
-      name: {
-        value: null,
-        rules: [() => true],
-      },
+    const form = new Form({
       last_name: {
-        value: null,
         rules: [() => false],
+        value: null,
+      },
+      name: {
+        rules: [() => true],
+        value: null,
       },
     })
 
@@ -75,12 +75,12 @@ describe('Form.validation.ts', () => {
 
     await form.$validateAll()
 
-    expect(form.$validateField).toHaveBeenNthCalledWith(1, 'name')
-    expect(form.$validateField).toHaveBeenNthCalledWith(2, 'last_name')
+    expect(form.$validateField).toHaveBeenNthCalledWith(1, 'last_name')
+    expect(form.$validateField).toHaveBeenNthCalledWith(2, 'name')
   })
 
   it('should call to validate specific field or all the fields', async () => {
-    let form = new Form({ first_name: null })
+    const form = new Form({ first_name: null })
 
     form.$validateAll = jest.fn()
     form.$validateField = jest.fn()
@@ -100,7 +100,7 @@ describe('Form.validation.ts', () => {
   })
 
   it('should bubble up errors that are not FieldValidationError on validateField method', async () => {
-    let form = new Form({ name: null })
+    const form = new Form({ name: null })
 
     form.$validator.validateField = jest.fn(() => {
       throw new Error('error')
@@ -117,7 +117,7 @@ describe('Form.validation.ts', () => {
   })
 
   it('should checks if validating the field', () => {
-    let form = new Form({ name: null })
+    const form = new Form({ name: null })
 
     form.$validator.$validating.has = jest.fn(() => true)
 
@@ -131,7 +131,7 @@ describe('Form.validation.ts', () => {
   })
 
   it('should check if the whole form is on validation mode', () => {
-    let form = new Form({ name: null })
+    const form = new Form({ name: null })
 
     form.$validator.$validating.any = jest.fn(() => true)
 
@@ -145,9 +145,9 @@ describe('Form.validation.ts', () => {
   })
 
   it('should warn if the field is not exists in the initial fields', () => {
-    let warnSpy = jest.spyOn(utils, 'warn')
+    const warnSpy = jest.spyOn(utils, 'warn')
 
-    let form = new Form({ name: null })
+    const form = new Form({ name: null })
 
     form.$isValidating('loYodea')
 

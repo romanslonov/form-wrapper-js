@@ -1,18 +1,18 @@
-import { InterceptorManager } from '../core/InterceptorManager'
 import { Form } from '../core/Form'
+import { InterceptorManager } from '../core/InterceptorManager'
 
 /**
  * an object that hold 2 function one for fulfill and one for reject
  */
-export interface InterceptorHandler {
-  fulfilled: Function
-  rejected: Function
+export interface IInterceptorHandler {
+  fulfilled: (response: any) => any
+  rejected: (error: any) => any
 }
 
 /**
  * an object that hold only InterceptorManagers as value
  */
-export interface InterceptorManagersObject {
+export interface IInterceptorManagersObject {
   beforeSubmission: InterceptorManager
   submissionComplete: InterceptorManager
   [key: string]: InterceptorManager
@@ -22,7 +22,7 @@ export interface InterceptorManagersObject {
  * The interface of an object with successful response from the
  * SubmitCallback function
  */
-export interface SuccessfulResponse {
+export interface ISuccessfulResponse {
   form: Form
   response: any
 }
@@ -31,7 +31,7 @@ export interface SuccessfulResponse {
  * The interface of an object with unsuccessful response from the
  * SubmitCallback function
  */
-export interface InvalidResponse {
+export interface IInvalidResponse {
   form: Form
   error: any
 }

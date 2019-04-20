@@ -6,14 +6,14 @@ jest.mock('../../../src/core/validation/Validator')
 jest.mock('../../../src/core/FieldKeysCollection')
 
 describe('Form.events.ts', () => {
-  let data = {
+  const data = {
     first_name: null,
-    last_name: null,
     is_developer: false,
+    last_name: null,
   }
 
   it('should validate field that was change if the "validation.onFieldChanged" set as true', () => {
-    let form = new Form(data, {
+    const form = new Form(data, {
       validation: {
         onFieldChanged: true,
       },
@@ -40,7 +40,7 @@ describe('Form.events.ts', () => {
   })
 
   it('should clear field errors after field changed', () => {
-    let form = new Form(data, {
+    const form = new Form(data, {
       validation: {
         unsetFieldErrorsOnFieldChange: false,
       },
@@ -63,7 +63,7 @@ describe('Form.events.ts', () => {
   })
 
   it('should push to touched and set $onFocus when field is on focus', () => {
-    let form = new Form(data)
+    const form = new Form(data)
 
     form.$fieldFocused('first_name')
 
@@ -73,7 +73,7 @@ describe('Form.events.ts', () => {
   })
 
   it('should reset $onFocus if the field is on focus, and validate the field if "validation.onFieldBlurred" is set', () => {
-    let form = new Form(data, {
+    const form = new Form(data, {
       validation: {
         onFieldBlurred: false,
       },
@@ -101,9 +101,9 @@ describe('Form.events.ts', () => {
   })
 
   it('should warn if field not exists in fieldBlurred, fieldChanged and fieldFocused methods', () => {
-    let warnMock = jest.spyOn(utils, 'warn')
+    const warnMock = jest.spyOn(utils, 'warn')
 
-    let form = new Form(data)
+    const form = new Form(data)
 
     form.$fieldChanged('some_field_1')
     expect(warnMock).toHaveBeenCalledTimes(1)

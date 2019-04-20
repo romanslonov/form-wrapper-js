@@ -1,13 +1,13 @@
-import { RawRule, RulesStack } from '../../types/Validator'
-import { Rule } from './Rule'
 import generateMessageFunction from '../../helpers/generateMessageFunction'
 import { MessageFunction, PassesFunction } from '../../types/Errors'
+import { IRawRule, IRulesStack } from '../../types/Validator'
+import { Rule } from './Rule'
 
 export class RulesManager {
   /**
    * All the fields Rules.
    */
-  private _rules: RulesStack = {}
+  private _rules: IRulesStack = {}
 
   /**
    * Default message for the rules
@@ -20,7 +20,7 @@ export class RulesManager {
    * @param rules
    * @param defaultMessage
    */
-  constructor(rules: Object, defaultMessage: MessageFunction | string) {
+  constructor(rules: object, defaultMessage: MessageFunction | string) {
     this._defaultMessage = generateMessageFunction(defaultMessage)
     this._buildRules(rules)
   }
@@ -65,7 +65,7 @@ export class RulesManager {
   /**
    * return the whole fields rules
    */
-  public all(): RulesStack {
+  public all(): IRulesStack {
     return this._rules
   }
 
@@ -77,7 +77,7 @@ export class RulesManager {
    */
   public buildFieldRules(
     fieldKey: string,
-    rawRules: Array<RawRule | PassesFunction>
+    rawRules: Array<IRawRule | PassesFunction>
   ) {
     this._rules[fieldKey] = rawRules.map(rawValue =>
       Rule.buildFromRawValue(rawValue, this._defaultMessage)
@@ -90,7 +90,7 @@ export class RulesManager {
    * @param rules
    * @private
    */
-  private _buildRules(rules: Object): RulesManager {
+  private _buildRules(rules: object): RulesManager {
     Object.keys(rules).forEach(fieldKey => {
       this.buildFieldRules(fieldKey, rules[fieldKey])
     })

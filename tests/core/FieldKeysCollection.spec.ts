@@ -1,22 +1,15 @@
 import { FieldKeysCollection } from '../../src/core/FieldKeysCollection'
 
 describe('FieldKeysCollection.ts', () => {
-  it('should returns all the field keys array', () => {
-    let fieldKeysCollection = new FieldKeysCollection()
-    fieldKeysCollection.$fieldKeys = ['a', 'b']
-
-    expect(fieldKeysCollection.all()).toEqual(['a', 'b'])
-  })
-
   it('should record field keys', () => {
-    let fieldKeysCollection = new FieldKeysCollection()
+    const fieldKeysCollection = new FieldKeysCollection()
     fieldKeysCollection.record(['a', 'b'])
 
     expect(fieldKeysCollection.all()).toEqual(['a', 'b'])
   })
 
   it('should check if field key is exists', () => {
-    let fieldKeysCollection = new FieldKeysCollection()
+    const fieldKeysCollection = new FieldKeysCollection()
     fieldKeysCollection.record(['a', 'b'])
 
     expect(fieldKeysCollection.has('a')).toBe(true)
@@ -25,7 +18,7 @@ describe('FieldKeysCollection.ts', () => {
   })
 
   it('should add field to the field keys array', () => {
-    let fieldKeysCollection = new FieldKeysCollection()
+    const fieldKeysCollection = new FieldKeysCollection()
     fieldKeysCollection.record(['a', 'b'])
 
     fieldKeysCollection.push('c')
@@ -35,7 +28,7 @@ describe('FieldKeysCollection.ts', () => {
   })
 
   it('should clear all the field keys array', () => {
-    let fieldKeysCollection = new FieldKeysCollection()
+    const fieldKeysCollection = new FieldKeysCollection()
     fieldKeysCollection.record(['a', 'b'])
 
     fieldKeysCollection.clear()
@@ -44,7 +37,7 @@ describe('FieldKeysCollection.ts', () => {
   })
 
   it('should check if there is any field key', () => {
-    let fieldKeysCollection = new FieldKeysCollection()
+    const fieldKeysCollection = new FieldKeysCollection()
 
     expect(fieldKeysCollection.any()).toBe(false)
 
@@ -54,7 +47,7 @@ describe('FieldKeysCollection.ts', () => {
   })
 
   it('should unset field from the field keys array', () => {
-    let fieldKeysCollection = new FieldKeysCollection()
+    const fieldKeysCollection = new FieldKeysCollection()
     fieldKeysCollection.record(['a', 'b'])
 
     fieldKeysCollection.unset('a')

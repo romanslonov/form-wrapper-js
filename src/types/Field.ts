@@ -1,11 +1,11 @@
-import { RawRule } from './Validator'
 import { PassesFunction } from './Errors'
+import { IRawRule } from './Validator'
 
 /**
  * Field object that passes the PassesFunction and MessageFunction,
  * it used in the Validator class.
  */
-export interface Field {
+export interface IField {
   key: string
   label: string
   value: any
@@ -17,16 +17,16 @@ export interface Field {
  * rules are the constraints of the field and label is just the visible
  * value of the field/
  */
-export interface FieldOptions {
+export interface IFieldOptions {
   value: any
   extra?: any
-  rules?: Array<RawRule | PassesFunction>
+  rules?: Array<IRawRule | PassesFunction>
   label?: string
 }
 
 /**
  * This interface declare the fields of the form
  */
-export interface RawFormFields {
-  [fieldKey: string]: any | FieldOptions
+export interface IRawFormFields {
+  [fieldKey: string]: any | IFieldOptions
 }

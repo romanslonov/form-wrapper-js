@@ -1,19 +1,19 @@
-import { FieldOptions } from '../types/Field'
+import { IFieldOptions } from '../types/Field'
 import { isFieldOptions } from '../utils'
 import generateDefaultLabel from './generateDefaultLabel'
 
-export default (fieldKey: string, value: any | FieldOptions): FieldOptions => {
+export default (fieldKey: string, value: any | IFieldOptions): IFieldOptions => {
   return isFieldOptions(value)
     ? {
-        value: value.value,
+        extra: value.extra ? value.extra : {},
         label: value.label ? value.label : generateDefaultLabel(fieldKey),
         rules: value.rules ? value.rules : [],
-        extra: value.extra ? value.extra : {},
+        value: value.value,
       }
     : {
-        value,
+        extra: {},
         label: generateDefaultLabel(fieldKey),
         rules: [],
-        extra: {},
+        value,
       }
 }

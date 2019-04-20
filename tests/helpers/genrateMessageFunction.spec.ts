@@ -18,7 +18,7 @@ describe('generateMessageFunction.ts', () => {
   })
 
   it('should warn if the arguments is not a string or function', () => {
-    let warnMock = jest.spyOn(utils, 'warn')
+    const warnMock = jest.spyOn(utils, 'warn')
     const argument = 1
 
     // @ts-ignore

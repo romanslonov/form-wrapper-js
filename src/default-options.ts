@@ -1,22 +1,22 @@
-import { Options } from './types/Options'
+import { IOptions } from './types/Options'
 
 /**
  * Default options that provide to Form instance
  */
-const defaultOptions: Options = {
+const defaultOptions: IOptions = {
   successfulSubmission: {
     clearErrors: true,
     clearTouched: true,
     resetValues: true,
   },
   validation: {
+    debouncedValidateFieldTime: 0,
+    defaultMessage: ({ label }) => `${label} is invalid.`,
     onFieldBlurred: false,
     onFieldChanged: false,
-    debouncedValidateFieldTime: 0,
     onSubmission: true,
-    unsetFieldErrorsOnFieldChange: false,
     stopAfterFirstRuleFailed: true,
-    defaultMessage: ({ label }) => `${label} is invalid.`,
+    unsetFieldErrorsOnFieldChange: false,
   },
 }
 

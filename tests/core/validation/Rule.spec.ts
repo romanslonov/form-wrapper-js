@@ -1,10 +1,10 @@
 import { mocked } from 'ts-jest/utils'
 import { Rule } from '../../../src/core/validation/Rule'
-import { MessageFunction, PassesFunction } from '../../../src/types/Errors'
-import { RawRule } from '../../../src/types/Validator'
 import generateMessageFunction from '../../../src/helpers/generateMessageFunction'
-import { Field } from '../../../src/types/Field'
 import { Form, RuleValidationError } from '../../../src/index'
+import { MessageFunction, PassesFunction } from '../../../src/types/Errors'
+import { IField } from '../../../src/types/Field'
+import { IRawRule } from '../../../src/types/Validator'
 
 jest.mock('../../../src/helpers/generateMessageFunction', () => ({
   __esModule: true,
@@ -12,9 +12,9 @@ jest.mock('../../../src/helpers/generateMessageFunction', () => ({
 }))
 
 describe('Rule.ts', () => {
-  let fakeDefaultMessage: MessageFunction = () => 'example'
-  let fakeForm: Form = new Form({})
-  let fakeField: Field = { key: 'a', label: 'a', value: 'a' }
+  const fakeDefaultMessage: MessageFunction = () => 'example'
+  const fakeForm: Form = new Form({})
+  const fakeField: IField = { key: 'a', label: 'a', value: 'a' }
 
   beforeEach(() => {
     mocked(generateMessageFunction).mockClear()
@@ -47,7 +47,7 @@ describe('Rule.ts', () => {
 
   it('should build Rule class with RawRule object that passes prop NOT returns promise', () => {
     const passes = jest.fn(() => true)
-    const rawValue: RawRule = {
+    const rawValue: IRawRule = {
       passes,
     }
 
@@ -63,9 +63,9 @@ describe('Rule.ts', () => {
 
   it('should build Rule class and generate a message from the message prop that provided', () => {
     const message = 'this is a message'
-    const rawValue: RawRule = {
-      passes: () => true,
+    const rawValue: IRawRule = {
       message,
+      passes: () => true,
     }
 
     const rule = Rule.buildFromRawValue(rawValue, fakeDefaultMessage)
@@ -80,7 +80,7 @@ describe('Rule.ts', () => {
   it('should validate with the passes function that`s returns true', async () => {
     const passes = jest.fn(() => true)
 
-    const rawValue: RawRule = {
+    const rawValue: IRawRule = {
       passes,
     }
 
@@ -95,7 +95,7 @@ describe('Rule.ts', () => {
   it('should validate with the passes function that`s returns false', async () => {
     const passes = jest.fn(() => false)
 
-    const rawValue: RawRule = {
+    const rawValue: IRawRule = {
       passes,
     }
 
@@ -117,7 +117,7 @@ describe('Rule.ts', () => {
     const promise = Promise.resolve()
     const passes = jest.fn(() => promise)
 
-    const rawValue: RawRule = {
+    const rawValue: IRawRule = {
       passes,
     }
 

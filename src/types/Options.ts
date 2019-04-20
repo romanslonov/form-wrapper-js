@@ -3,7 +3,7 @@ import { MessageFunction } from './Errors'
 /**
  * options that related to successful submission of the form
  */
-export interface SuccessfulSubmissionOptions {
+export interface ISuccessfulSubmissionOptions {
   /**
    * Clear errors after successful submission
    */
@@ -23,7 +23,7 @@ export interface SuccessfulSubmissionOptions {
 /**
  * options that related to validation
  */
-export interface ValidationOptions {
+export interface IValidationOptions {
   /**
    * validate the field on field changed
    */
@@ -66,7 +66,7 @@ export interface ValidationOptions {
 /**
  * Form general Options
  */
-export interface Options {
-  successfulSubmission?: SuccessfulSubmissionOptions
-  validation?: ValidationOptions
+export interface IOptions {
+  successfulSubmission?: ISuccessfulSubmissionOptions
+  validation?: IValidationOptions
 }

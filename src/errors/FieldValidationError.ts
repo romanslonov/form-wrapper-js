@@ -7,7 +7,7 @@ export class FieldValidationError extends Error {
   /**
    * holds all the errors message
    */
-  messages: string[]
+  public messages: string[]
 
   /**
    * Field Validation Error constructor

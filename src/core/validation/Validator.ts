@@ -1,10 +1,10 @@
+import { FieldValidationError } from '../../errors/FieldValidationError'
+import { RuleValidationError } from '../../errors/RuleValidationError'
+import { IField } from '../../types/Field'
+import { IValidationOptions } from '../../types/Options'
+import { FieldKeysCollection } from '../FieldKeysCollection'
 import { Form } from '../Form'
 import { Rule } from './Rule'
-import { FieldKeysCollection } from '../FieldKeysCollection'
-import { RuleValidationError } from '../../errors/RuleValidationError'
-import { FieldValidationError } from '../../errors/FieldValidationError'
-import { Field } from '../../types/Field'
-import { ValidationOptions } from '../../types/Options'
 
 /**
  * Validator Class
@@ -18,14 +18,14 @@ export class Validator {
   /**
    * Validations options
    */
-  private _options: ValidationOptions
+  private _options: IValidationOptions
 
   /**
    * Validator constructor.
    *
    * @param options
    */
-  constructor(options: ValidationOptions) {
+  constructor(options: IValidationOptions) {
     this._options = { ...options }
     this.$validating = new FieldKeysCollection()
   }
@@ -39,7 +39,7 @@ export class Validator {
    */
   public async validateField(
     rules: Rule[],
-    field: Field,
+    field: IField,
     form: Form
   ): Promise<any> {
     const { key } = field
@@ -50,7 +50,7 @@ export class Validator {
     this.$validating.push(key)
 
     while (fieldRulesChain.length) {
-      let fieldRule = fieldRulesChain.shift()
+      const fieldRule = fieldRulesChain.shift()
 
       try {
         await fieldRule.validate(field, form)

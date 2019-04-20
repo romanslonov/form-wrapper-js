@@ -1,17 +1,17 @@
+import { IRawFormFields } from '../types/Field'
+import { IOptions } from '../types/Options'
 import { Form } from './Form'
-import { RawFormFields } from '../types/Field'
-import { Options } from '../types/Options'
 
 export class FormCollection {
   /**
    * The prototype for the a form item
    */
-  public $prototype: RawFormFields
+  public $prototype: IRawFormFields
 
   /**
    * The options for the form item
    */
-  public $prototypeOptions: Options
+  public $prototypeOptions: IOptions
 
   /**
    * The forms array - holds the current Forms
@@ -24,7 +24,7 @@ export class FormCollection {
    * @param prototype
    * @param prototypeOptions
    */
-  constructor(prototype: RawFormFields = {}, prototypeOptions: Options = {}) {
+  constructor(prototype: IRawFormFields = {}, prototypeOptions: IOptions = {}) {
     this.$prototype = prototype
     this.$prototypeOptions = prototypeOptions
   }
@@ -83,7 +83,7 @@ export class FormCollection {
   /**
    * return all the values of the forms in array
    */
-  public values(): Object[] {
+  public values(): object[] {
     return this.$forms.map((form: Form) => {
       return form.$values()
     })
@@ -94,9 +94,9 @@ export class FormCollection {
    *
    * @param data
    */
-  public fill(data: Object[]): FormCollection {
-    data.forEach((data: Object) => {
-      this.add().$fill(data)
+  public fill(data: object[]): FormCollection {
+    data.forEach((dataItem: object) => {
+      this.add().$fill(dataItem)
     })
 
     return this

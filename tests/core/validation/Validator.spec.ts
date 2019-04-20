@@ -1,26 +1,25 @@
+import { FieldKeysCollection } from '../../../src/core/FieldKeysCollection'
 import { Form } from '../../../src/core/Form'
 import { RulesManager } from '../../../src/core/validation/RulesManager'
 import { Validator } from '../../../src/core/validation/Validator'
 import defaultOptions from '../../../src/default-options'
-import { Field } from '../../../src/types/Field'
 import { FieldValidationError } from '../../../src/errors/FieldValidationError'
-import { ValidationOptions } from '../../../src/types/Options'
 import { RuleValidationError } from '../../../src/index'
-import { FieldKeysCollection } from '../../../src/core/FieldKeysCollection'
+import { IField } from '../../../src/types/Field'
+import { IValidationOptions } from '../../../src/types/Options'
 
 jest.mock('../../../src/core/Form')
 
 describe('Validator.ts', () => {
-  let fakeForm: Form = new Form({})
-  let defaultValidationOptions: ValidationOptions
+  const fakeForm: Form = new Form({})
+  let defaultValidationOptions: IValidationOptions
 
   beforeEach(() => {
     defaultValidationOptions = { ...defaultOptions.validation }
   })
 
   it('should construct correctly', () => {
-
-    let validator = new Validator(defaultValidationOptions)
+    const validator = new Validator(defaultValidationOptions)
 
     expect(validator.$validating).toBeInstanceOf(FieldKeysCollection)
   })
@@ -28,8 +27,8 @@ describe('Validator.ts', () => {
   it('should return a resolved promise if fieldKey is not exists', () => {
     const validator = new Validator(defaultValidationOptions)
 
-    let fakeField: Field = { key: 'a', label: 'a', value: 'a' }
-    let response = validator.validateField([], fakeField, fakeForm)
+    const fakeField: IField = { key: 'a', label: 'a', value: 'a' }
+    const response = validator.validateField([], fakeField, fakeForm)
 
     expect(response).toResolve()
   })
@@ -39,7 +38,7 @@ describe('Validator.ts', () => {
     const passesMock2 = jest.fn(() => true)
     const passesMock3 = jest.fn(() => Promise.resolve())
 
-    let rulesManager = new RulesManager(
+    const rulesManager = new RulesManager(
       {
         name: [
           passesMock1,
@@ -52,7 +51,7 @@ describe('Validator.ts', () => {
 
     const validator = new Validator(defaultValidationOptions)
 
-    const field: Field = { key: 'name', value: 'a', label: 'a' }
+    const field: IField = { key: 'name', value: 'a', label: 'a' }
 
     const response = await validator.validateField(
       rulesManager.get('name'),
@@ -90,7 +89,7 @@ describe('Validator.ts', () => {
 
     expect.assertions(6)
 
-    const field: Field = { key: 'name', value: 'a', label: 'a' }
+    const field: IField = { key: 'name', value: 'a', label: 'a' }
     try {
       await validator.validateField(ruleManager.get('name'), field, fakeForm)
     } catch (e) {
@@ -120,8 +119,8 @@ describe('Validator.ts', () => {
       {
         name: [
           {
-            passes: passesMock1,
             message: ({ label }) => `${label} invalid`,
+            passes: passesMock1,
             returnsPromise: true,
           },
           passesMock2,
@@ -132,7 +131,7 @@ describe('Validator.ts', () => {
 
     const validator = new Validator(defaultValidationOptions)
 
-    const field: Field = { key: 'name', value: 'a', label: 'a' }
+    const field: IField = { key: 'name', value: 'a', label: 'a' }
 
     expect.assertions(5)
 
@@ -165,7 +164,7 @@ describe('Validator.ts', () => {
 
     const validator = new Validator(defaultValidationOptions)
 
-    const field: Field = { key: 'name', value: 'a', label: 'a' }
+    const field: IField = { key: 'name', value: 'a', label: 'a' }
 
     try {
       await validator.validateField(ruleManager.get('name'), field, fakeForm)
@@ -187,7 +186,7 @@ describe('Validator.ts', () => {
 
     const validator = new Validator(defaultValidationOptions)
 
-    const field: Field = { key: 'name', value: 'a', label: 'a' }
+    const field: IField = { key: 'name', value: 'a', label: 'a' }
 
     expect(validator.$validating.has('name')).toBe(false)
 

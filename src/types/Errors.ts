@@ -1,23 +1,22 @@
-import { Field } from './Field'
 import { Form } from '../core/Form'
+import { IField } from './Field'
 
 /**
  * Passes function is a prop in Rule Object
  */
-export interface PassesFunction {
-  (field?: Field, form?: Form): Promise<any> | boolean
-}
+export type PassesFunction = (
+  field?: IField,
+  form?: Form
+) => Promise<any> | boolean
 
 /**
  * Message function is a prop in the Rule Object
  */
-export interface MessageFunction {
-  (field?: Field, form?: Form): string
-}
+export type MessageFunction = (field?: IField, form?: Form) => string
 
 /**
  * Errors Stack must be a field key with an array of strings
  */
-export interface ErrorsStack {
+export interface IErrorsStack {
   [fieldKey: string]: string[]
 }

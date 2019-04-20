@@ -1,17 +1,17 @@
-import { ErrorsStack } from '../../types/Errors'
+import { IErrorsStack } from '../../types/Errors'
 
 export class Errors {
   /**
    * Errors stack, holds all the form errors
    */
-  $errors: ErrorsStack
+  private _errors: IErrorsStack
 
   /**
    * Construct the Errors class with errors
    *
    * @param errors
    */
-  constructor(errors: ErrorsStack = {}) {
+  constructor(errors: IErrorsStack = {}) {
     this.record(errors)
   }
 
@@ -20,8 +20,8 @@ export class Errors {
    *
    * @param errors
    */
-  public record(errors: ErrorsStack): Errors {
-    this.$errors = {
+  public record(errors: IErrorsStack): Errors {
+    this._errors = {
       ...errors,
     }
 
@@ -33,9 +33,9 @@ export class Errors {
    *
    * @param errors
    */
-  public push(errors: ErrorsStack): Errors {
-    this.$errors = {
-      ...this.$errors,
+  public push(errors: IErrorsStack): Errors {
+    this._errors = {
+      ...this._errors,
       ...errors,
     }
 
@@ -48,7 +48,7 @@ export class Errors {
    * @param fieldKey
    */
   public has(fieldKey: string): boolean {
-    return this.$errors.hasOwnProperty(fieldKey)
+    return this._errors.hasOwnProperty(fieldKey)
   }
 
   /**
@@ -62,7 +62,7 @@ export class Errors {
       return defaultValue
     }
 
-    return this.$errors[fieldKey]
+    return this._errors[fieldKey]
   }
 
   /**
@@ -80,8 +80,8 @@ export class Errors {
   /**
    * Returns all the ErrorsStack
    */
-  public all(): ErrorsStack {
-    return this.$errors
+  public all(): IErrorsStack {
+    return this._errors
   }
 
   /**
@@ -91,9 +91,9 @@ export class Errors {
    */
   public unset(fieldKey: string): Errors {
     if (this.has(fieldKey)) {
-      delete this.$errors[fieldKey]
+      delete this._errors[fieldKey]
 
-      this.$errors = { ...this.$errors }
+      this._errors = { ...this._errors }
     }
 
     return this
@@ -103,14 +103,14 @@ export class Errors {
    * check if there is any error in the ErrorsStack
    */
   public any(): boolean {
-    return Object.keys(this.$errors).length > 0
+    return Object.keys(this._errors).length > 0
   }
 
   /**
    * Clear the ErrorsStack object
    */
   public clear(): Errors {
-    this.$errors = {}
+    this._errors = {}
 
     return this
   }

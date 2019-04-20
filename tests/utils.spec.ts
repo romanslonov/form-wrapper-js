@@ -1,4 +1,4 @@
-import { isObject, warn, debounce, uniqueId } from '../src/utils'
+import { debounce, isObject, uniqueId, warn } from '../src/utils'
 
 describe('utils.js', () => {
   it('should determine if value is object', () => {
@@ -21,9 +21,9 @@ describe('utils.js', () => {
   it('should debounce the method', () => {
     jest.useFakeTimers()
 
-    let callback = jest.fn()
+    const callback = jest.fn()
 
-    let debouncedCallback = debounce(callback, 2000)
+    const debouncedCallback = debounce(callback, 2000)
     debouncedCallback('argument1', 2)
 
     expect(callback).toHaveBeenCalledTimes(0)

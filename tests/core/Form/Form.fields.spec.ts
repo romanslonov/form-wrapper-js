@@ -5,31 +5,31 @@ jest.mock('../../../src/core/validation/RulesManager')
 
 describe('Form.fields.ts', () => {
   it('should add new field with native value to the form fields', () => {
-    const form = new Form()
+    const form = new Form() as Form & { [key: string]: any }
 
     form.$addField('name', 'Nevo')
 
-    expect(form['name']).toEqual('Nevo')
-    expect(form.$labels['name']).toBe('Name')
+    expect(form.name).toEqual('Nevo')
+    expect(form.$labels.name).toBe('Name')
   })
 
   it('should add new field with FieldOptions as value', () => {
     const rules = [jest.fn(() => true)]
     const extra = { options: [] }
 
-    const form = new Form()
+    const form = new Form() as Form & { [key: string]: any }
 
     form.$addField('name', {
-      value: 'Nevo',
+      extra,
       label: 'This is name',
       rules,
-      extra,
+      value: 'Nevo',
     })
 
-    expect(form['name']).toBe('Nevo')
-    expect(form.$labels['name']).toBe('This is name')
+    expect(form.name).toBe('Nevo')
+    expect(form.$labels.name).toBe('This is name')
     expect(form.$rules.buildFieldRules).toHaveBeenCalledWith('name', rules)
-    expect(form.$extra['name']).toBe(extra)
+    expect(form.$extra.name).toBe(extra)
   })
 
   it('should warn if trying to add an existed field', () => {
@@ -50,8 +50,8 @@ describe('Form.fields.ts', () => {
     form.$addField = jest.fn()
 
     const lastNameFieldOption = {
-      value: null,
       label: 'The last name',
+      value: null,
     }
 
     form.$addFields({
@@ -94,8 +94,8 @@ describe('Form.fields.ts', () => {
 
   it('should remove number of fields', () => {
     const form = new Form({
-      name: null,
       last_name: null,
+      name: null,
     })
 
     form.$removeField = jest.fn()

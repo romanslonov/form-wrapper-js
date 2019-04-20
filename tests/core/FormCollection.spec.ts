@@ -1,13 +1,13 @@
 import { Form, FormCollection } from '../../src'
-import { RawFormFields } from '../../src/types/Field'
-import { Options } from '../../src/types/Options'
+import { IRawFormFields } from '../../src/types/Field'
+import { IOptions } from '../../src/types/Options'
 import { uniqueId } from '../../src/utils'
 
 jest.mock('../../src/core/Form')
 
 describe('FormCollection.ts', () => {
-  let prototype: RawFormFields = { name: null }
-  let prototypeOptions: Options = {
+  const prototype: IRawFormFields = { name: null }
+  const prototypeOptions: IOptions = {
     validation: { onSubmission: true },
   }
 
@@ -26,7 +26,7 @@ describe('FormCollection.ts', () => {
 
     expect(formCollection.$forms).toBeEmpty()
 
-    let form = formCollection.add()
+    const form = formCollection.add()
 
     expect(Form).toHaveBeenCalledWith(
       formCollection.$prototype,

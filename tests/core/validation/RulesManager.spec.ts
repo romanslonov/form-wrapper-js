@@ -1,8 +1,8 @@
-import defaultOptions from '../../../src/default-options'
-import { RulesManager } from '../../../src/core/validation/RulesManager'
 import { Rule } from '../../../src/core/validation/Rule'
-import { ValidationOptions } from '../../../src/types/Options'
+import { RulesManager } from '../../../src/core/validation/RulesManager'
+import defaultOptions from '../../../src/default-options'
 import generateMessageFunction from '../../../src/helpers/generateMessageFunction'
+import { IValidationOptions } from '../../../src/types/Options'
 
 jest.mock('../../../src/helpers/generateMessageFunction', () => {
   return {
@@ -12,21 +12,14 @@ jest.mock('../../../src/helpers/generateMessageFunction', () => {
 })
 
 describe('RulesManager.ts', () => {
-  let defaultValidationOptions: ValidationOptions
-  let rules = {
+  let defaultValidationOptions: IValidationOptions
+  const rules = {
     first_name: [() => true],
-    last_name: [
-      {
-        passes: () => false,
-        message: 'Invalid',
-      },
-      () => true,
-    ],
     is_developer: [
       {
-        passes: ({ value }) => value,
         message: ({ label, value }) =>
           `${label} is invalid. the ${value} is incorrect`,
+        passes: ({ value }) => value,
       },
       {
         passes: () => Promise.resolve(),
@@ -37,6 +30,13 @@ describe('RulesManager.ts', () => {
         returnsPromise: true,
       },
     ],
+    last_name: [
+      {
+        message: 'Invalid',
+        passes: () => false,
+      },
+      () => true,
+    ],
   }
 
   beforeEach(() => {
@@ -44,9 +44,9 @@ describe('RulesManager.ts', () => {
   })
 
   it('should construct correctly', () => {
-    let buildFieldRule = jest.spyOn(RulesManager.prototype, 'buildFieldRules')
+    const buildFieldRule = jest.spyOn(RulesManager.prototype, 'buildFieldRules')
 
-    let rulesManager = new RulesManager(
+    const rulesManager = new RulesManager(
       rules,
       defaultValidationOptions.defaultMessage
     )
@@ -74,7 +74,7 @@ describe('RulesManager.ts', () => {
   })
 
   it('should determine if has rule', () => {
-    let rulesManager = new RulesManager(
+    const rulesManager = new RulesManager(
       rules,
       defaultValidationOptions.defaultMessage
     )
@@ -86,7 +86,7 @@ describe('RulesManager.ts', () => {
   })
 
   it('should get the rules of the field key that requested', () => {
-    let rulesManager = new RulesManager(
+    const rulesManager = new RulesManager(
       rules,
       defaultValidationOptions.defaultMessage
     )
@@ -100,37 +100,37 @@ describe('RulesManager.ts', () => {
   })
 
   it('should returns all the fields rules', () => {
-    let rulesManager = new RulesManager(
+    const rulesManager = new RulesManager(
       rules,
       defaultValidationOptions.defaultMessage
     )
 
-    let fieldsRules = rulesManager.all()
+    const fieldsRules = rulesManager.all()
 
     expect(Object.keys(fieldsRules)).toEqual([
       'first_name',
-      'last_name',
       'is_developer',
+      'last_name',
     ])
 
-    Object.keys(fieldsRules).forEach(function(fieldKey) {
+    Object.keys(fieldsRules).forEach(fieldKey => {
       expect(fieldsRules[fieldKey]).toBeArray()
     })
   })
 
   it('should build field rules correctly', () => {
-    let rulesManager = new RulesManager(
+    const rulesManager = new RulesManager(
       rules,
       defaultValidationOptions.defaultMessage
     )
 
-    let buildFromRawValueSpy = jest.spyOn(Rule, 'buildFromRawValue')
+    const buildFromRawValueSpy = jest.spyOn(Rule, 'buildFromRawValue')
 
-    let newRules = [
+    const newRules = [
       () => true,
       {
-        passes: () => false,
         message: 'a',
+        passes: () => false,
       },
     ]
 
@@ -154,7 +154,7 @@ describe('RulesManager.ts', () => {
   })
 
   it('should unset a field rules', () => {
-    let rulesManager = new RulesManager(
+    const rulesManager = new RulesManager(
       rules,
       defaultValidationOptions.defaultMessage
     )

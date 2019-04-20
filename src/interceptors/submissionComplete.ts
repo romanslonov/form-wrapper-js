@@ -1,20 +1,20 @@
 import {
-  InterceptorHandler,
-  InvalidResponse,
-  SuccessfulResponse,
+  IInterceptorHandler,
+  IInvalidResponse,
+  ISuccessfulResponse,
 } from '../types/Interceptors'
 
 /**
  * set the $submitting property as false event if the submission
  * was successful or not
  */
-export const setSubmittingAsFalse: InterceptorHandler = {
-  fulfilled: (response: SuccessfulResponse) => {
+export const setSubmittingAsFalse: IInterceptorHandler = {
+  fulfilled: (response: ISuccessfulResponse) => {
     response.form.$submitting = false
 
     return Promise.resolve(response)
   },
-  rejected: (error: InvalidResponse) => {
+  rejected: (error: IInvalidResponse) => {
     error.form.$submitting = false
 
     return Promise.reject(error)
@@ -25,8 +25,8 @@ export const setSubmittingAsFalse: InterceptorHandler = {
  * clear the form (errors, touched and values) base on the options
  * that was set at the form.
  */
-export const clearForm: InterceptorHandler = {
-  fulfilled: (response: SuccessfulResponse) => {
+export const clearForm: IInterceptorHandler = {
+  fulfilled: (response: ISuccessfulResponse) => {
     const { form } = response
 
     form.$options.successfulSubmission.clearErrors && form.$errors.clear()

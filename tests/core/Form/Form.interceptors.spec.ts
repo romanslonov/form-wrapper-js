@@ -6,7 +6,7 @@ jest.mock('../../../src/core/FieldKeysCollection')
 
 describe('Form.interceptors.ts', () => {
   it('should add new interceptor to the end of the chain when using submissionComplete interceptorManager', async () => {
-    let form = new Form({})
+    const form = new Form({})
 
     const fulfilledFunc = jest.fn()
     const rejectedFunc = jest.fn()
@@ -37,16 +37,16 @@ describe('Form.interceptors.ts', () => {
   })
 
   it('should add new interceptor to the begging of the chain when using beforeSubmission interceptorManager', async () => {
-    let form = new Form({})
+    const form = new Form({})
 
     expect.assertions(8)
 
-    const fulfilledFunc = jest.fn(form => form)
+    const fulfilledFunc = jest.fn(formArg => formArg)
     const rejectedFunc = jest.fn(error => Promise.reject(error))
 
     form.$interceptors.beforeSubmission.use(fulfilledFunc, rejectedFunc)
 
-    let callback = jest.fn(() => Promise.resolve('yay!'))
+    const callback = jest.fn(() => Promise.resolve('yay!'))
 
     await form.$submit(callback)
 
@@ -72,7 +72,7 @@ describe('Form.interceptors.ts', () => {
   })
 
   it('should not call the interceptor if the user eject it', async () => {
-    let form = new Form({})
+    const form = new Form({})
 
     expect.assertions(4)
 
@@ -113,18 +113,18 @@ describe('Form.interceptors.ts', () => {
       submissionCompleteRejectedFunc
     )
 
-    let form = new Form({})
+    const form = new Form({})
 
-    expect(form.$interceptors.beforeSubmission.$handlers[0].fulfilled).toBe(
+    expect(form.$interceptors.beforeSubmission.all()[0].fulfilled).toBe(
       beforeSubmissionFulfilledFunc
     )
-    expect(form.$interceptors.beforeSubmission.$handlers[0].rejected).toBe(
+    expect(form.$interceptors.beforeSubmission.all()[0].rejected).toBe(
       beforeSubmissionRejectedFunc
     )
-    expect(form.$interceptors.submissionComplete.$handlers[0].fulfilled).toBe(
+    expect(form.$interceptors.submissionComplete.all()[0].fulfilled).toBe(
       submissionCompleteFulfilledFunc
     )
-    expect(form.$interceptors.submissionComplete.$handlers[0].rejected).toBe(
+    expect(form.$interceptors.submissionComplete.all()[0].rejected).toBe(
       submissionCompleteRejectedFunc
     )
   })

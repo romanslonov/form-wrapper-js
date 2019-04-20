@@ -1,34 +1,44 @@
-import { Errors } from './validation/Errors'
-import { Validator } from './validation/Validator'
-import { FieldKeysCollection } from './FieldKeysCollection'
-import { InterceptorManager } from './InterceptorManager'
-import { RulesManager } from './validation/RulesManager'
-import { uniqueId, warn } from '../utils'
+import defaultOptions from '../default-options'
+import { FieldValidationError } from '../errors/FieldValidationError'
 import generateDebouncedValidateField from '../helpers/generateDebouncedValidateField'
 import generateFieldOptions from '../helpers/generateFieldOptions'
 import generateOptions from '../helpers/generateOptions'
-import defaultOptions from '../default-options'
 import basicInterceptors from '../interceptors/index'
-import { Field, FieldOptions, RawFormFields } from '../types/Field'
-import { FormDefaults, SubmitCallback } from '../types/Form'
-import { Options } from '../types/Options'
+import { IField, IFieldOptions, IRawFormFields } from '../types/Field'
+import { IFormDefaults, SubmitCallback } from '../types/Form'
 import {
-  InterceptorHandler,
-  InterceptorManagersObject,
+  IInterceptorHandler,
+  IInterceptorManagersObject,
 } from '../types/Interceptors'
-import { FieldValidationError } from '../errors/FieldValidationError'
+import { IOptions } from '../types/Options'
+import { uniqueId, warn } from '../utils'
+import { FieldKeysCollection } from './FieldKeysCollection'
 import { FormCollection } from './FormCollection'
+import { InterceptorManager } from './InterceptorManager'
+import { Errors } from './validation/Errors'
+import { RulesManager } from './validation/RulesManager'
+import { Validator } from './validation/Validator'
 
 export class Form {
   /**
    * holds all the defaults for the forms
    */
-  public static defaults: FormDefaults = {
-    options: defaultOptions,
+  public static defaults: IFormDefaults = {
     interceptors: {
       beforeSubmission: new InterceptorManager(),
       submissionComplete: new InterceptorManager(),
     },
+    options: defaultOptions,
+  }
+
+  /**
+   * setting up default options for the Form class in more
+   * convenient way then "Form.defaults.options.validation.something = something"
+   *
+   * @param options
+   */
+  public static assignDefaultOptions(options: IOptions = {}): void {
+    Form.defaults.options = generateOptions(Form.defaults.options, options)
   }
 
   /**
@@ -66,7 +76,7 @@ export class Form {
   /**
    * Holds all the labels of the fields
    */
-  public $labels: Object = {}
+  public $labels: { [key: string]: any } = {}
 
   /**
    * hold the input that is on focus right now
@@ -77,28 +87,28 @@ export class Form {
    * all the extra values that provide in the construction of this class
    * will be hold here.
    */
-  public $extra: Object = {}
+  public $extra: { [key: string]: any } = {}
 
   /**
    * Options of the Form
    */
-  public $options: Options = Form.defaults.options
+  public $options: IOptions = Form.defaults.options
 
   /**
    * holds the interceptor managers
    */
-  public $interceptors: InterceptorManagersObject
+  public $interceptors: IInterceptorManagersObject
 
   /**
    * holds the debounced version of `validateField` method the debounce time is
    * pre defined in the `$options` prop
    */
-  public $debouncedValidateField: Function
+  public $debouncedValidateField: (fieldKey: string) => void
 
   /**
    * The initiate values that was provide to the form
    */
-  public $initialValues: Object = {}
+  public $initialValues: { [key: string]: any } = {}
 
   /**
    * constructor of the class
@@ -106,7 +116,7 @@ export class Form {
    * @param fields
    * @param options
    */
-  constructor(fields: RawFormFields = {}, options: Options = {}) {
+  constructor(fields: IRawFormFields = {}, options: IOptions = {}) {
     this.$id = uniqueId()
 
     this.$assignOptions(options)
@@ -127,21 +137,11 @@ export class Form {
   }
 
   /**
-   * setting up default options for the Form class in more
-   * convenient way then "Form.defaults.options.validation.something = something"
-   *
-   * @param options
-   */
-  public static assignDefaultOptions(options: Options = {}): void {
-    Form.defaults.options = generateOptions(Form.defaults.options, options)
-  }
-
-  /**
    * assign options to Options object
    *
    * @param options
    */
-  public $assignOptions(options: Options) {
+  public $assignOptions(options: IOptions) {
     this.$options = generateOptions(this.$options, options)
     this.$debouncedValidateField = generateDebouncedValidateField(this)
 
@@ -154,12 +154,12 @@ export class Form {
    * @param fieldKey
    * @param value
    */
-  public $addField(fieldKey: string, value: any | FieldOptions): Form {
+  public $addField(fieldKey: string, value: any | IFieldOptions): Form {
     if (this.$hasField(fieldKey)) {
       warn(`\`${fieldKey}\` is already exists`)
     }
 
-    const fieldOptions: FieldOptions = generateFieldOptions(fieldKey, value)
+    const fieldOptions: IFieldOptions = generateFieldOptions(fieldKey, value)
 
     this[fieldKey] = fieldOptions.value
     this.$initialValues[fieldKey] = fieldOptions.value
@@ -175,7 +175,7 @@ export class Form {
    *
    * @param fields
    */
-  public $addFields(fields: RawFormFields): Form {
+  public $addFields(fields: IRawFormFields): Form {
     Object.keys(fields).forEach(fieldKey => {
       this.$addField(fieldKey, fields[fieldKey])
     })
@@ -227,7 +227,7 @@ export class Form {
    * Set all the fields value same as $initialValues fields value
    */
   public $resetValues(): Form {
-    for (let fieldName in this.$initialValues) {
+    for (const fieldName in this.$initialValues) {
       if (this.$initialValues.hasOwnProperty(fieldName)) {
         this[fieldName] = this.$initialValues[fieldName]
       }
@@ -250,8 +250,8 @@ export class Form {
   /**
    * get all the values of the form
    */
-  public $values(): Object {
-    let dataObj = {}
+  public $values(): object {
+    const dataObj = {}
 
     Object.keys(this.$initialValues).forEach(fieldKey => {
       if (this.$hasField(fieldKey)) {
@@ -273,14 +273,16 @@ export class Form {
     const values = this.$values()
     const formData = new FormData()
 
-    for (let key in values) {
-      let value = values[key]
+    for (const key in values) {
+      if (values.hasOwnProperty(key)) {
+        const value = values[key]
 
-      if ([undefined, false, null].indexOf(value) > -1) {
-        continue
+        if ([undefined, false, null].indexOf(value) > -1) {
+          continue
+        }
+
+        formData.append(key, value)
       }
-
-      formData.append(key, value)
     }
 
     return formData
@@ -299,8 +301,8 @@ export class Form {
    *
    * @param data
    */
-  public $fill(data: Object): Form {
-    for (let fieldName in data) {
+  public $fill(data: object): Form {
+    for (const fieldName in data) {
       if (data.hasOwnProperty(fieldName) && this.$hasField(fieldName)) {
         if (this[fieldName] instanceof FormCollection) {
           this[fieldName].fill(data[fieldName])
@@ -395,8 +397,11 @@ export class Form {
 
     let dirty = false
 
-    for (let originalFieldKey in this.$initialValues) {
-      if (this.$isFieldDirty(originalFieldKey)) {
+    for (const originalFieldKey in this.$initialValues) {
+      if (
+        this.$initialValues.hasOwnProperty(originalFieldKey) &&
+        this.$isFieldDirty(originalFieldKey)
+      ) {
         dirty = true
         break
       }
@@ -486,7 +491,7 @@ export class Form {
    * @param callback
    */
   public $submit(callback: SubmitCallback): Promise<any> {
-    let chain: any[] = [
+    const chain: any[] = [
       () => callback(this),
       null,
       response => Promise.resolve({ response, form: this }),
@@ -495,13 +500,13 @@ export class Form {
 
     this.$interceptors.beforeSubmission
       .merge(basicInterceptors.beforeSubmission)
-      .forEach((handler: InterceptorHandler) =>
+      .forEach((handler: IInterceptorHandler) =>
         chain.unshift(handler.fulfilled, handler.rejected)
       )
 
     this.$interceptors.submissionComplete
       .merge(basicInterceptors.submissionComplete)
-      .forEach((handler: InterceptorHandler) =>
+      .forEach((handler: IInterceptorHandler) =>
         chain.push(handler.fulfilled, handler.rejected)
       )
 
@@ -520,11 +525,11 @@ export class Form {
    * @param fieldKey
    * @private
    */
-  private _buildFieldObject(fieldKey: string): Field {
+  private _buildFieldObject(fieldKey: string): IField {
     return {
       key: fieldKey,
-      value: this[fieldKey],
       label: this.$labels[fieldKey],
+      value: this[fieldKey],
     }
   }
 }

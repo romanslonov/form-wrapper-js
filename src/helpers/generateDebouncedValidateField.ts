@@ -1,5 +1,5 @@
-import { debounce } from '../utils'
 import { Form } from '../core/Form'
+import { debounce } from '../utils'
 
 /**
  * generate a debounced versions of validate field method
@@ -7,7 +7,7 @@ import { Form } from '../core/Form'
  *
  * @param form
  */
-export default (form: Form): Function => {
+export default (form: Form): ((fieldKey: string) => void) => {
   return debounce(
     form.$validateField.bind(form),
     form.$options.validation.debouncedValidateFieldTime
